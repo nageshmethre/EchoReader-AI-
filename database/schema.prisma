@@ -1,5 +1,5 @@
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -49,8 +49,8 @@ model Document {
   fileKey       String          // Storage reference
   fileSize      Int
   fileType      String          // e.g. "pdf", "docx", "epub", "txt"
-  parsedText    String?         @db.Text
-  summary       String?         @db.Text
+  parsedText    String?
+  summary       String?
   author        String?
   language      String?         @default("en")
   createdAt     DateTime        @default(now())
@@ -68,7 +68,7 @@ model DocumentChunk {
   pageIndex      Int
   paragraphIndex Int
   sentenceIndex  Int
-  content        String   @db.Text
+  content        String
   wordCount      Int
   document       Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
 
@@ -131,7 +131,7 @@ model Message {
   id             String       @id @default(uuid())
   conversationId String
   role           String       // "user", "assistant", "system"
-  content        String       @db.Text
+  content        String
   createdAt      DateTime     @default(now())
   conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
 }
