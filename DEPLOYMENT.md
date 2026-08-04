@@ -1,6 +1,6 @@
-# EchoReader AI Subdomain Deployment Guide
+# EchoReader AI Subdomain Deployment Guide (stream-in.app)
 
-This guide details cloud deployment instructions using distinct subdomains for the Next.js web client (`app.echoreader.ai`) and Fastify backend API server (`api.echoreader.ai`).
+This guide details cloud deployment instructions using distinct subdomains for the Next.js web client (`app.stream-in.app`) and Fastify backend API server (`api.stream-in.app`).
 
 ---
 
@@ -21,8 +21,8 @@ Update your production `.env` configuration file at the server root:
 
 ```ini
 # Production URLs config
-API_URL=https://api.echoreader.ai
-WEB_URL=https://app.echoreader.ai
+API_URL=https://api.stream-in.app
+WEB_URL=https://app.stream-in.app
 
 # Production Server port listeners
 PORT=3001
@@ -42,7 +42,7 @@ sudo apt-get update
 sudo apt-get install certbot python3-certbot-nginx -y
 
 # Generate SSL certificates for both subdomains
-sudo certbot certonly --nginx -d app.echoreader.ai -d api.echoreader.ai
+sudo certbot certonly --nginx -d app.stream-in.app -d api.stream-in.app
 ```
 
 ---

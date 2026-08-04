@@ -53,21 +53,21 @@ export default function Home() {
         <title>EchoReader AI - Convert PDF, EPUB, DOCX Documents to Natural Speech</title>
         <meta name="description" content="EchoReader AI is a professional cross-platform Document Reader that parses layout structures (PDF, EPUB, Word, spread sheets) and reads text with natural voice speech synchronizations and interactive RAG chat capabilities." />
         <meta name="keywords" content="Text to Speech, PDF reader, document to voice, AI reader, RAG document chat, EPUB speech, optical character recognition, local LLM Ollama reader" />
-        <link rel="canonical" href="https://app.echoreader.ai" />
+        <link rel="canonical" href="https://app.stream-in.app" />
 
         {/* OpenGraph / Facebook */}
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://app.echoreader.ai" />
+        <meta property="og:url" content="https://app.stream-in.app" />
         <meta property="og:title" content="EchoReader AI - Intelligent Document to Speech" />
         <meta property="og:description" content="Convert PDFs, Word docs, Spreadsheets, or Epubs into natural high-fidelity voices with sentence highlights, auto-scroll, and an AI chat assistant running semantic queries." />
-        <meta property="og:image" content="https://app.echoreader.ai/assets/seo-banner.jpg" />
+        <meta property="og:image" content="https://app.stream-in.app/assets/seo-banner.jpg" />
 
         {/* Twitter */}
         <meta property="twitter:card" content="summary_large_image" />
-        <meta property="twitter:url" content="https://app.echoreader.ai" />
+        <meta property="twitter:url" content="https://app.stream-in.app" />
         <meta property="twitter:title" content="EchoReader AI - Intelligent Document to Speech" />
         <meta property="twitter:description" content="Convert PDFs, Word docs, Spreadsheets, or Epubs into natural high-fidelity voices with sentence highlights, auto-scroll, and an AI chat assistant running semantic queries." />
-        <meta property="twitter:image" content="https://app.echoreader.ai/assets/seo-banner.jpg" />
+        <meta property="twitter:image" content="https://app.stream-in.app/assets/seo-banner.jpg" />
 
         {/* Google Structured Data / Rich Snippets (Schema.org JSON-LD) */}
         <script
@@ -77,7 +77,7 @@ export default function Home() {
               "@context": "https://schema.org",
               "@type": "WebApplication",
               "name": "EchoReader AI",
-              "url": "https://app.echoreader.ai",
+              "url": "https://app.stream-in.app",
               "description": "An AI-powered cross-platform Document Reader that converts uploaded documents into natural human speech while allowing intelligent interaction with the document.",
               "applicationCategory": "EducationalApplication",
               "operatingSystem": "Windows, macOS, Linux, Web",
