@@ -16,7 +16,7 @@
       "@echoreader/types": ["packages/types/src/index.ts"],
       "@echoreader/utils": ["packages/utils/src/index.ts"],
       "@echoreader/hooks": ["packages/hooks/src/index.ts"],
-      "@echoreader/ui": ["packages/ui/src/index.ts"]
+      "@echoreader/ui": ["packages/ui/src/index.tsx"]
     }
   },
   "exclude": ["node_modules", "dist"]

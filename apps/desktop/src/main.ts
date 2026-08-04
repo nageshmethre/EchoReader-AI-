@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, globalShortcut, Menu, Tray, Notification } from 'electron';
+import { app, BrowserWindow, ipcMain, globalShortcut, Menu, Tray, Notification, nativeImage } from 'electron';
 import path from 'path';
 import fs from 'fs';
 
@@ -42,7 +42,7 @@ function createTray() {
   // Check if icon exists, fallback if not
   const hasIcon = fs.existsSync(iconPath);
   
-  tray = new Tray(hasIcon ? iconPath : Buffer.alloc(0)); // empty icon fallback
+  tray = new Tray(hasIcon ? iconPath : nativeImage.createEmpty()); // empty icon fallback
   const contextMenu = Menu.buildFromTemplate([
     { label: 'Open EchoReader AI', click: () => mainWindow?.show() },
     { label: 'Play / Pause Speech', click: () => mainWindow?.webContents.send('tts-toggle') },

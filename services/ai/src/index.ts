@@ -1,15 +1,6 @@
-import { GoogleGenAI } from '@google/generative-ai';
 import OpenAI from 'openai';
 import axios from 'axios';
 
-// Initialize APIs if keys are available
-const getGeminiClient = () => {
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) return null;
-  // Note: Depending on SDK version, GoogleGenAI or GoogleGenerativeAI is instantiated.
-  // We can write a clean direct fetch wrapper or use the SDK wrapper. Let's make it robust.
-  return new GoogleGenAI({ apiKey });
-};
 
 const getOpenAIClient = () => {
   const apiKey = process.env.OPENAI_API_KEY;

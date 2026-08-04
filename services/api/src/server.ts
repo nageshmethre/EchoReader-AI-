@@ -170,7 +170,7 @@ fastify.post('/api/documents/upload', { preValidation: [(fastify as any).authent
   try {
     await searchAdapter.indexDocumentChunks(document.id, searchChunks);
   } catch (err) {
-    fastify.log.warn('Could not index chunks to search server:', err);
+    fastify.log.warn({ err }, 'Could not index chunks to search server');
   }
 
   return { document, totalSentences: sentences.length };
@@ -195,7 +195,7 @@ fastify.get('/api/documents/:id', { preValidation: [(fastify as any).authenticat
     return reply.status(404).send({ error: 'Document not found' });
   }
 
-  const sentences = doc.chunks.map(c => c.content);
+  const sentences = doc.chunks.map((c: any) => c.content);
   const stats = calculateReadingStats(doc.parsedText || '');
 
   return {
@@ -251,7 +251,7 @@ fastify.post('/api/documents/:id/chat', { preValidation: [(fastify as any).authe
     take: 5 // Get first 5 chunks as context. (In fully enabled RAG, query database using vector math)
   });
 
-  const contextTexts = chunks.map(c => c.content);
+  const contextTexts = chunks.map((c: any) => c.content);
   
   try {
     const aiResponse = await queryDocumentRAG(message, contextTexts, history || [], provider || 'gemini');

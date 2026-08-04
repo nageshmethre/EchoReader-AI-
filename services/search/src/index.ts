@@ -48,7 +48,7 @@ export class MeiliSearchAdapter implements SearchAdapter {
 
     return {
       hits: searchResponse.hits as SearchItem[],
-      total: searchResponse.totalHits || searchResponse.hits.length,
+      total: (searchResponse as any).totalHits || (searchResponse as any).estimatedTotalHits || searchResponse.hits.length,
     };
   }
 
