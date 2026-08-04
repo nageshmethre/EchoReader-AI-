@@ -1,6 +1,6 @@
-# EchoReader AI Subdomain Deployment Guide (stream-in.app)
+# EchoReader AI Nested Subdomain Deployment Guide
 
-This guide details cloud deployment instructions using distinct subdomains for the Next.js web client (`app.stream-in.app`) and Fastify backend API server (`api.stream-in.app`).
+This guide details cloud deployment instructions using distinct subdomains for the Next.js web client (`echoreader.ai.stream-in.app`) and Fastify backend API server (`api.echoreader.ai.stream-in.app`).
 
 ---
 
@@ -8,10 +8,10 @@ This guide details cloud deployment instructions using distinct subdomains for t
 
 Add the following `A Records` to your DNS provider (e.g. Cloudflare, Route 53, GoDaddy) pointing to your target cloud server IP (e.g. `203.0.113.50`):
 
-| Host/Subdomain | Record Type | Value / Destination | Tooltip / Description |
-| -------------- | ----------- | ------------------- | --------------------- |
-| `app`          | `A`         | `203.0.113.50`      | Web application entry |
-| `api`          | `A`         | `203.0.113.50`      | API Gateway endpoint  |
+| Host/Subdomain        | Record Type | Value / Destination | Tooltip / Description |
+| --------------------- | ----------- | ------------------- | --------------------- |
+| `echoreader.ai`       | `A`         | `203.0.113.50`      | Web application entry |
+| `api.echoreader.ai`   | `A`         | `203.0.113.50`      | API Gateway endpoint  |
 
 ---
 
@@ -21,8 +21,8 @@ Update your production `.env` configuration file at the server root:
 
 ```ini
 # Production URLs config
-API_URL=https://api.stream-in.app
-WEB_URL=https://app.stream-in.app
+API_URL=https://api.echoreader.ai.stream-in.app
+WEB_URL=https://echoreader.ai.stream-in.app
 
 # Production Server port listeners
 PORT=3001
@@ -42,7 +42,7 @@ sudo apt-get update
 sudo apt-get install certbot python3-certbot-nginx -y
 
 # Generate SSL certificates for both subdomains
-sudo certbot certonly --nginx -d app.stream-in.app -d api.stream-in.app
+sudo certbot certonly --nginx -d echoreader.ai.stream-in.app -d api.echoreader.ai.stream-in.app
 ```
 
 ---
