@@ -119,7 +119,8 @@ export default function ReaderPage() {
       theme === 'light' ? 'bg-zinc-50' : theme === 'dark' ? 'bg-zinc-950' : 'bg-[#faf4e8]'
     }`}>
       <Head>
-        <title>{documentTitle} - EchoReader AI Reader</title>
+        <title>{documentTitle} - EchoReader AI Reader Workspace</title>
+        <meta name="robots" content="noindex, nofollow" />
       </Head>
 
       {/* Top Navbar */}
