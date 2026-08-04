@@ -1,0 +1,91 @@
+version: '3.8'
+
+services:
+  # Relational Database Storage
+  postgres:
+    image: postgres:16-alpine
+    container_name: echoreader_db
+    restart: always
+    environment:
+      POSTGRES_DB: echoreader
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # Cache and Queue State management
+  redis:
+    image: redis:7-alpine
+    container_name: echoreader_cache
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  # Vector Database Storage for AI Chunks
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: echoreader_vector
+    restart: always
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant_data:/qdrant/storage
+
+  # Meilisearch Indexed Search engine
+  meilisearch:
+    image: getmeili/meilisearch:v1.6
+    container_name: echoreader_search_engine
+    restart: always
+    environment:
+      - MEILI_MASTER_KEY=meilisearch-master-key
+      - MEILI_ENV=development
+    ports:
+      - "7700:7700"
+    volumes:
+      - meilisearch_data:/meili_data
+
+  # Backend Fastify API service
+  api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.api
+    container_name: echoreader_api
+    restart: always
+    depends_on:
+      - postgres
+      - redis
+      - meilisearch
+    ports:
+      - "3001:3001"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/echoreader?schema=public
+      - REDIS_URL=redis://redis:6379
+      - MEILISEARCH_HOST=http://meilisearch:7700
+      - MEILISEARCH_API_KEY=meilisearch-master-key
+      - JWT_SECRET=production_docker_jwt_key_987654321
+
+  # Next.js Web Client
+  web:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.web
+    container_name: echoreader_web
+    restart: always
+    depends_on:
+      - api
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - API_URL=http://api:3001
+
+volumes:
+  postgres_data:
+  redis_data:
+  qdrant_data:
+  meilisearch_data:

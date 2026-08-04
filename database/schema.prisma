@@ -1,0 +1,137 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id            String         @id @default(uuid())
+  email         String         @unique
+  passwordHash  String?
+  name          String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  sessions      Session[]
+  documents     Document[]
+  bookmarks     Bookmark[]
+  playbackStates PlaybackState[]
+  conversations Conversation[]
+  settings      UserSettings?
+  oauthAccounts OAuthAccount[]
+}
+
+model OAuthAccount {
+  id         String   @id @default(uuid())
+  provider   String   // "google", "github"
+  providerId String
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerId])
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Document {
+  id            String          @id @default(uuid())
+  userId        String?
+  title         String
+  fileKey       String          // Storage reference
+  fileSize      Int
+  fileType      String          // e.g. "pdf", "docx", "epub", "txt"
+  parsedText    String?         @db.Text
+  summary       String?         @db.Text
+  author        String?
+  language      String?         @default("en")
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  user          User?           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  chunks        DocumentChunk[]
+  bookmarks     Bookmark[]
+  playbackStates PlaybackState[]
+  conversations Conversation[]
+}
+
+model DocumentChunk {
+  id             String   @id @default(uuid())
+  documentId     String
+  pageIndex      Int
+  paragraphIndex Int
+  sentenceIndex  Int
+  content        String   @db.Text
+  wordCount      Int
+  document       Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@index([documentId])
+}
+
+model PlaybackState {
+  id             String   @id @default(uuid())
+  userId         String
+  documentId     String
+  pageIndex      Int
+  paragraphIndex Int
+  sentenceIndex  Int
+  playbackSpeed  Float    @default(1.0)
+  voiceId        String   @default("default")
+  volume         Float    @default(1.0)
+  updatedAt      DateTime @updatedAt
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  document       Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, documentId])
+}
+
+model Bookmark {
+  id             String   @id @default(uuid())
+  userId         String
+  documentId     String
+  title          String
+  pageIndex      Int
+  paragraphIndex Int
+  sentenceIndex  Int
+  createdAt      DateTime @default(now())
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  document       Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+}
+
+model UserSettings {
+  id           String  @id @default(uuid())
+  userId       String  @unique
+  theme        String  @default("dark") // "light", "dark", "sepia"
+  defaultVoice String  @default("local-en")
+  defaultSpeed Float   @default(1.0)
+  autoScroll   Boolean @default(true)
+  cloudSync    Boolean @default(true)
+  user         User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Conversation {
+  id         String    @id @default(uuid())
+  userId     String
+  documentId String
+  title      String
+  createdAt  DateTime  @default(now())
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  document   Document  @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  messages   Message[]
+}
+
+model Message {
+  id             String       @id @default(uuid())
+  conversationId String
+  role           String       // "user", "assistant", "system"
+  content        String       @db.Text
+  createdAt      DateTime     @default(now())
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+}
