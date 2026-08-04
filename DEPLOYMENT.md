@@ -1,52 +1,74 @@
-# EchoReader AI Cloud Deployment Guide
+# EchoReader AI Subdomain Deployment Guide
 
-This guide details cloud deployment instructions for production environments.
+This guide details cloud deployment instructions using distinct subdomains for the Next.js web client (`app.echoreader.ai`) and Fastify backend API server (`api.echoreader.ai`).
 
 ---
 
-## 1. Multi-Container Orchestration
+## 1. Domain Name System (DNS) Configuration
 
-The simplest production deployment uses Docker Compose:
+Add the following `A Records` to your DNS provider (e.g. Cloudflare, Route 53, GoDaddy) pointing to your target cloud server IP (e.g. `203.0.113.50`):
 
-```bash
-# Clone remote repo
-git clone https://github.com/nageshmethre/EchoReader-AI-.git
-cd EchoReader-AI-
+| Host/Subdomain | Record Type | Value / Destination | Tooltip / Description |
+| -------------- | ----------- | ------------------- | --------------------- |
+| `app`          | `A`         | `203.0.113.50`      | Web application entry |
+| `api`          | `A`         | `203.0.113.50`      | API Gateway endpoint  |
 
-# Update database strings inside .env
-nano .env
+---
 
-# Build and start services in the background
-docker-compose up --build -d
+## 2. Environment Variables Configuration
+
+Update your production `.env` configuration file at the server root:
+
+```ini
+# Production URLs config
+API_URL=https://api.echoreader.ai
+WEB_URL=https://app.echoreader.ai
+
+# Production Server port listeners
+PORT=3001
+HOST=0.0.0.0
+NODE_ENV=production
 ```
 
 ---
 
-## 2. Reverse Proxy Setup (Nginx)
+## 3. SSL Certificate Setup (Let's Encrypt & Certbot)
 
-We recommend mapping Nginx to route ports `3000` (Next.js web) and `3001` (Fastify API):
+Install Certbot and request certificates on your hosting server:
 
-```nginx
-server {
-    listen 80;
-    server_name echoreader.ai;
+```bash
+# Install Certbot and Nginx extension
+sudo apt-get update
+sudo apt-get install certbot python3-certbot-nginx -y
 
-    location /api/ {
-        proxy_pass http://localhost:3001/;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_cache_bypass $http_upgrade;
-    }
+# Generate SSL certificates for both subdomains
+sudo certbot certonly --nginx -d app.echoreader.ai -d api.echoreader.ai
+```
 
-    location / {
-        proxy_pass http://localhost:3000/;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_cache_bypass $http_upgrade;
-    }
-}
+---
+
+## 4. Nginx Reverse Proxy Setup
+
+1. Copy the custom configuration:
+   ```bash
+   sudo cp docker/nginx.subdomains.conf /etc/nginx/sites-available/echoreader
+   ```
+2. Enable the site configuration:
+   ```bash
+   sudo ln -s /etc/nginx/sites-available/echoreader /etc/nginx/sites-enabled/
+   ```
+3. Test Nginx syntax correctness and reload the process:
+   ```bash
+   sudo nginx -t
+   sudo systemctl reload nginx
+   ```
+
+---
+
+## 5. Docker Compose Startup
+
+With domains and reverse-proxies active, launch the production containers stack:
+
+```bash
+docker-compose up --build -d
 ```
