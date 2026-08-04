@@ -98,15 +98,17 @@ export default function ReaderPage() {
 
     // Simulate RAG retrieval QA response delay
     setTimeout(() => {
-      let content = "I checked the document. ";
+      let content = "";
       const query = chatInput.toLowerCase();
 
-      if (query.includes('summary') || query.includes('about')) {
-        content += `This document is titled "${documentTitle}" and explains EchoReader AI parsing workflows, TTS speech synthesis synchronizations, and RAG architectures.`;
+      if (query.includes('xml')) {
+        content = "XML (Extensible Markup Language) is a markup language designed to store and transport data. Unlike HTML, which has predefined tags, XML tags are defined by the author.\n\nExample syntax:\n```xml\n<book>\n  <title>Web Development Essentials</title>\n  <author>EchoReader AI</author>\n</book>\n```\nIt is hierarchal, self-descriptive, and strict.";
+      } else if (query.includes('summary') || query.includes('about')) {
+        content = `I checked the document. This document is titled "${documentTitle}" and explains EchoReader AI parsing workflows, TTS speech synthesis synchronizations, and RAG architectures.`;
       } else if (query.includes('shortcut') || query.includes('keys')) {
-        content += "You can use spacebar to play/pause, left arrow to go back, and right arrow to skip ahead.";
+        content = "You can use spacebar to play/pause, left arrow to go back, and right arrow to skip ahead.";
       } else {
-        content += "According to the parsed text, layout scans are sliced into sentences, matched with embeddings, and index-queried via Meilisearch or Fuse.js.";
+        content = "I checked the document. According to the parsed text, layout scans are sliced into sentences, matched with embeddings, and index-queried via Meilisearch or Fuse.js.";
       }
 
       setChatMessages(prev => [...prev, { sender: 'assistant', content }]);
@@ -159,7 +161,7 @@ export default function ReaderPage() {
       </header>
 
       {/* Workspace split */}
-      <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-6 p-6 h-[calc(100vh-140px)] overflow-hidden">
+      <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-6 px-6 pt-6 pb-28 h-[calc(100vh-110px)] overflow-hidden">
         {/* Document view panel */}
         <div className="md:col-span-2 h-full">
           <ReaderPanel

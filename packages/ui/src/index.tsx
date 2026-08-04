@@ -310,13 +310,13 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
       {/* Input */}
       <div className="p-3 border-t border-zinc-800 bg-zinc-950/40">
         <div className="flex gap-2 bg-zinc-800 rounded-lg p-1.5 border border-zinc-700 focus-within:border-emerald-500">
-          <textarea
+          <input
+            type="text"
             value={inputValue}
             onChange={(e) => onInputChange(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Ask about this document..."
-            rows={1}
-            className="flex-1 bg-transparent border-0 text-sm px-2 text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-0 resize-none max-h-24 align-middle"
+            className="flex-1 bg-transparent border-0 text-sm px-2 py-1 text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-0"
           />
           <button
             onClick={onSendMessage}
